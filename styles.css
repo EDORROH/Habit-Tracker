@@ -249,43 +249,7 @@ body.dark .category-card {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.habit-btn.active {
-  background: #4caf50;
-  color: #fff;
-  border-color: #4caf50;
-  transform: scale(1.02);
-}
-
-body.dark .habit-btn {
-  background: #333;
-  color: #eee;
-  border-color: #555;
-}
-
-body.dark .habit-btn.active {
-  background: #4caf50;
-  color: #fff;
-}
-
-/* === Notifications === */
-.notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 1000;
-  font-size: 14px;
-  font-weight: 500;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-}
-
-.notification.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+/* Ensure custom "chip" is keyboard-focusable somewhere in markup:
+   .habit-chip { outline: none; }  <-- avoid this unless replaced.
+   If .habit-chip isn't a native control, give it role="button" and tabindex="0".
+*/
