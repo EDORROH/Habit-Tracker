@@ -1,9 +1,20 @@
 function showEmptyState() {
+
+  function showEmptyState() {
+  const el = document.getElementById('checklist');
+  if (!el) return;
+  function showEmptyState() {
+  // ...function code...
+}
+
+window.showEmptyState = showEmptyState;
+
+  
   const el = document.getElementById('checklist');
   el.innerHTML = `
-    <div class="empty-state">
-      <p>No habits selected yet. Let’s add some!</p>
-      <button id="goToHabitPicker" class="btn">Pick Habits</button>
+    <div class="empty-state" role="alert" aria-live="polite">
+      <p id="emptyStateMsg">No habits selected yet. Let’s add some!</p>
+      <button id="goToHabitPicker" class="btn" aria-label="Pick habits and go to habit picker" aria-describedby="emptyStateMsg">Pick Habits</button>
     </div>
   `;
 

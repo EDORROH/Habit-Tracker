@@ -18,8 +18,45 @@ Avoid
 */
 
 function calculateBadgeEligibility() {
-  const state = window.State.get();
-  const history = state.history || {};
+  const statePromise = window.State.get();
+  return statePromise.then(state => {
+    const history = state.history || {};
+    // Check if Streaks is available
+    if (!window.Streaks) {
+      console.error('❌ window.Streaks is not available!');
+      return {
+        currentStreak: 0,
+        longestStreak: 0,
+        hasAllGreenDay: false,
+        totalActiveDays: 0
+      };
+    }
+    // Calculate overall streaks by looking at days with any completed habits
+    const dailyCompletionHistory = {};
+    Object.keys(history).forEach(date => {
+      const dayHabits = history[date];
+      const hasAnyCompletedHabits = Object.values(dayHabits).some(completed => completed === true);
+      dailyCompletionHistory[date] = hasAnyCompletedHabits;
+    });
+    const currentStreak = window.Streaks.calculateCurrentStreak(dailyCompletionHistory);
+    const longestStreak = window.Streaks.bestStreak(dailyCompletionHistory);
+    // Check for "all-green day" - a day where user completed multiple habits
+    const hasAllGreenDay = Object.keys(history).some(date => {
+      const dayHabits = history[date];
+      const completedCount = Object.values(dayHabits).filter(completed => completed === true).length;
+      return completedCount >= 3; // Consider 3+ habits as "all green"
+    });
+    // Calculate total active days
+    const totalActiveDays = Object.keys(dailyCompletionHistory).filter(date =>
+      dailyCompletionHistory[date] === true
+    ).length;
+    return {
+      currentStreak,
+      longestStreak,
+      hasAllGreenDay,
+      totalActiveDays
+    };
+  });
 
   // Check if Streaks is available
   if (!window.Streaks) {
@@ -65,9 +102,7 @@ function calculateBadgeEligibility() {
 
 // Badge definitions with icons + tooltips
 function getBadgesState() {
-  const stats = calculateBadgeEligibility();
-  
-  return [
+  return calculateBadgeEligibility().then(stats => [
     {
       name: 'First Steps',
       earned: stats.totalActiveDays >= 1,
@@ -103,38 +138,36 @@ function getBadgesState() {
       iconLocked: '❌',
       tooltip: "Incredible! You've achieved a 21-day streak!"
     }
-  ];
+  ]);
 }
 
 function renderBadges() {
   const el = document.getElementById('badges');
-
   if (!el) {
     console.error('❌ badges element not found!');
     return;
   }
-
-  const badgesState = getBadgesState();
-
-  el.innerHTML = `
-    <h2 style="margin-bottom:0.5rem;">Badges</h2>
-    <div class="badges-grid" role="list">
-      ${badgesState.map(badge => `
-        <div
-          class="badge-card${badge.earned ? '' : ' locked'}"
-          role="listitem"
-          aria-label="${badge.name} badge ${badge.earned ? 'unlocked' : 'locked'}"
-          title="${badge.tooltip}"
-        >
-          <span class="badge-icon" aria-hidden="true">
-            ${badge.earned ? badge.iconUnlocked : badge.iconLocked}
-          </span>
-          <span class="badge-label">${badge.name}</span>
-          <span class="badge-status">${badge.earned ? 'Unlocked' : 'Locked'}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
+  getBadgesState().then(badgesState => {
+    el.innerHTML = `
+      <h2 style="margin-bottom:0.5rem;">Badges</h2>
+      <div class="badges-grid" role="list">
+        ${badgesState.map(badge => `
+          <div
+            class="badge-card${badge.earned ? '' : ' locked'}"
+            role="listitem"
+            aria-label="${badge.name} badge ${badge.earned ? 'unlocked' : 'locked'}"
+            title="${badge.tooltip}"
+          >
+            <span class="badge-icon" aria-hidden="true">
+              ${badge.earned ? badge.iconUnlocked : badge.iconLocked}
+            </span>
+            <span class="badge-label">${badge.name}</span>
+            <span class="badge-status">${badge.earned ? 'Unlocked' : 'Locked'}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  });
 
 
 }

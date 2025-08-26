@@ -42,10 +42,15 @@ function mapDaysToCompletion(history) {
 }
 
 // Render colored squares for each day (now using CSS Grid)
-function renderTowerView(history) {
+export function renderTowerView(history) {
   const completions = mapDaysToCompletion(history);
   const el = document.getElementById('towerView');
-  
+  console.log('[TowerView] Rendering with history:', history);
+  console.log('[TowerView] Completions for last 7 days:', completions);
+  if (!el) {
+    console.warn('[TowerView] #towerView element not found in DOM');
+    return;
+  }
   el.innerHTML = `
     <div class="tower-grid">
       ${completions.map(done => 
@@ -65,39 +70,3 @@ function renderTowerView(history) {
   `;
 }
 
-function renderTowerView(history) {
-  const completions = mapDaysToCompletion(history);
-  const el = document.getElementById('towerView');
-  el.innerHTML = `
-    <div style="display:flex;justify-content:center;align-items:center;">
-      ${completions.map(done =>
-        `<span style="display:inline-block;width:40px;height:40px;margin:4px;
-          background:${done ? '#00B300' : '#005580'};border-radius:8px;"></span>`
-      ).join('')}
-    </div>
-    <div style="margin-top:8px;display:flex;justify-content:center;gap:16px;font-size:14px;">
-      <span>
-        <span style="display:inline-block;width:16px;height:16px;background:#00B300;border-radius:4px;margin-right:4px;"></span>
-        Done
-      </span>
-      <span>
-        <span style="display:inline-block;width:16px;height:16px;background:#005580;border-radius:4px;margin-right:4px;"></span>
-        Not Done
-      </span>
-    </div>
-  `;
-}
-// TEMP TESTING — remove before submitting!
-const testHistory = {
-  "2025-08-14": { habitA: true },
-  "2025-08-15": { habitA: false, habitB: true },
-  "2025-08-16": { habitA: false },
-  "2025-08-17": { habitB: false },
-  "2025-08-18": { habitA: true },
-  "2025-08-19": { habitA: false, habitB: false },
-  "2025-08-20": { habitA: true }
-};
-
-renderTowerView(testHistory);
-// Example usage (call this whenever State.history changes):
-// renderTowerView(State.history);

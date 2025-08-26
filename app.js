@@ -58,23 +58,11 @@ function showNotification(message) {
   notification.className = 'notification';
   notification.textContent = message;
   
-  // Style the notification
-  Object.assign(notification.style, {
-    position: 'fixed',
-    top: '20px',
-    right: '20px',
-    background: '#4caf50',
-    color: 'white',
-    padding: '12px 20px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-    zIndex: '1000',
-    fontSize: '14px',
-    fontWeight: '500',
-    opacity: '0',
-    transform: 'translateY(-10px)',
-    transition: 'all 0.3s ease'
-  });
+  // Remove inline styles, use CSS class instead
+  notification.classList.add('notification-success');
+  notification.style.opacity = '0';
+  notification.style.transform = 'translateY(-10px)';
+  notification.style.transition = 'all 0.3s ease';
   
   document.body.appendChild(notification);
   
@@ -271,6 +259,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log('🎯 DOM Content Loaded');
   
   try {
+    // Import and render Tower View
+    const { renderTowerView } = await import("./components/towerView.js");
+    if (window.State && window.State.get) {
+      const state = await window.State.get();
+      renderTowerView(state.history);
+    }
     // Initialize XP system
     loadXP();
     checkNewDay();
@@ -369,12 +363,16 @@ function setupHabitListeners() {
   console.log('🎯 Setting up listeners for', habitButtons.length, 'habit buttons');
   
   habitButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const habitId = btn.dataset.habitId;
       const isActive = btn.classList.contains('active');
-      
       console.log('🎯 Habit clicked:', habitId, 'Current state:', isActive ? 'active' : 'inactive');
-      
+      // Get today's date string
+      const today = new Date().toISOString().slice(0, 10);
+      // Get current state from backend
+      let state = (window.State && window.State.get) ? await window.State.get() : {};
+      let history = state.history || {};
+      if (!history[today] || typeof history[today] !== 'object') history[today] = {};
       if (isActive) {
         // Deactivating habit - lose XP and remove from completed
         btn.classList.remove('active');
@@ -382,6 +380,8 @@ function setupHabitListeners() {
         btn.style.color = '';
         addXP(-5); // Lose 5 XP
         completedHabits.delete(habitId);
+        // Remove habit from today's history (set to false)
+        history[today][habitId] = false;
         console.log('❌ Habit deactivated:', habitId);
       } else {
         // Activating habit - gain XP and add to completed
@@ -390,15 +390,30 @@ function setupHabitListeners() {
         btn.style.color = 'white';
         addXP(10); // Gain 10 XP
         completedHabits.add(habitId);
+        // Mark habit as completed for today
+        history[today][habitId] = true;
         console.log('✅ Habit activated:', habitId);
-        
         // Update streak when completing a habit
         updateStreak();
       }
-      
       // Save completed habits and update badges
       saveCompletedHabits();
       renderBadges();
+      // Update State.history in backend
+      if (window.State && window.State.set) {
+        await window.State.set({ ...state, history });
+      } else if (window.State) {
+        window.State.history = history;
+      }
+      // Always re-render Tower View after habit state changes
+      console.log('[HabitClick] About to import and call renderTowerView');
+      import('./components/towerView.js').then(({ renderTowerView }) => {
+        console.log('[HabitClick] towerView.js imported, calling renderTowerView');
+        renderTowerView(history);
+        console.log('[HabitClick] renderTowerView called');
+      }).catch(err => {
+        console.error('[HabitClick] Error importing towerView.js:', err);
+      });
     });
   });
 }

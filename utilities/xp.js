@@ -43,15 +43,10 @@ export function totalXp(history) {
  */
 function updateDailyXp(points) {
   // Check and reset daily XP if needed (this will transfer previous day's XP to total)
-  const state = window.State.checkAndResetDailyXp();
-
-  // Update only daily XP - total XP will be updated during the next daily reset
-  state.dailyXp = Math.max(0, (state.dailyXp || 0) + points);
-
-  // Save the updated state
-  window.State.set(state);
-
-  return state;
+  return window.State.checkAndResetDailyXp().then(state => {
+    state.dailyXp = Math.max(0, (state.dailyXp || 0) + points);
+    return window.State.set(state).then(() => state);
+  });
 }
 
 /**
@@ -59,8 +54,7 @@ function updateDailyXp(points) {
  * @returns {number} Daily XP as a number
  */
 function getDailyXp() {
-  const result = window.State.checkAndResetDailyXp();
-  return result.dailyXp || 0;
+  return window.State.checkAndResetDailyXp().then(result => result.dailyXp || 0);
 }
 
 /**
@@ -68,8 +62,7 @@ function getDailyXp() {
  * @returns {number} Total XP earned
  */
 function getTotalXp() {
-  const state = window.State.get();
-  return state.xp || 0;
+  return window.State.get().then(state => state.xp || 0);
 }
 
 /*

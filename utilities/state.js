@@ -26,21 +26,40 @@ What belongs here
     reminders: []         // [{ id, scope:'global'|'habit', habitId?, type:'DAILY'|'WEEKLY', daysOfWeek?, times:[] }]
   };
 
-  function load() {
+
+  // Replace localStorage with MongoDB API
+  const API_BASE = 'http://localhost:4000/api/state';
+  const USER_ID = 'defaultUser'; // Replace with real user ID if available
+
+  async function load() {
     try {
-      const raw = localStorage.getItem(KEY);
-      return raw ? JSON.parse(raw) : { ...defaults };
-    } catch {
+      const res = await fetch(`${API_BASE}/${USER_ID}`);
+      if (!res.ok) throw new Error('Failed to fetch state');
+      const data = await res.json();
+      return data ? data : { ...defaults };
+    } catch (err) {
+      console.error('State load error:', err);
       return { ...defaults };
     }
   }
 
-  function save(state) {
-    localStorage.setItem(KEY, JSON.stringify(state));
+  async function save(state) {
+    try {
+      await fetch(`${API_BASE}/${USER_ID}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(state)
+        }
+      );
+    } catch (err) {
+      console.error('State save error:', err);
+    }
   }
 
+  // get/set now return Promises
   function get() { return load(); }
-  function set(next) { save(next); }
+  function set(next) { return save(next); }
 
   // Local YYYY-MM-DD (avoids timezone rollover surprises)
   function todayKey() {

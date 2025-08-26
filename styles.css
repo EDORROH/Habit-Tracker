@@ -1,3 +1,62 @@
+@media (max-width: 600px) {
+  .tower-grid {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+    justify-content: center;
+    align-items: center;
+  }
+  .tower-day {
+    width: 32px;
+    height: 32px;
+    margin: 0 2px;
+  }
+  .legend {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    align-items: center;
+  }
+}
+/* === Responsive Header and XP Tracker for Mobile === */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    position: static;
+  }
+  .xp-tracker {
+    position: static !important;
+    right: auto !important;
+    margin-top: 0.5rem;
+    margin-left: 0;
+    font-size: 1rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  header h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+}
+/* === Notification Styling === */
+.notification-success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  font-size: 14px;
+  font-weight: 500;
+}
 
 body {
   font-family: Arial, sans-serif;
@@ -253,3 +312,97 @@ body.dark .category-card {
    .habit-chip { outline: none; }  <-- avoid this unless replaced.
    If .habit-chip isn't a native control, give it role="button" and tabindex="0".
 */
+
+/* === Empty State Styling === */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin: 2rem auto;
+  max-width: 400px;
+}
+
+body.dark .empty-state {
+  background: #232323;
+  color: #f9f9f9;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #7a6c5d;
+}
+
+body.dark .empty-state p {
+  color: #e0cfae;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  background: #9c27b0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn:hover {
+  background: #7b1fa2;
+}
+
+/* === Tower View Styling === */
+.tower-grid {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+.tower-day {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #eee;
+  border: 2px solid #ccc;
+  transition: background 0.3s, border-color 0.3s;
+}
+.tower-day.completed {
+  background: #00B300;
+  border-color: #00B300;
+}
+.tower-day.not-completed {
+  background: #005580;
+  border-color: #005580;
+}
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 8px;
+  font-size: 14px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+.legend-swatch.completed {
+  background: #00B300;
+}
+.legend-swatch.not-completed {
+  background: #005580;
+}
