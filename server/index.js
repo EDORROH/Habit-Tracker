@@ -1,3 +1,8 @@
+// ...existing code...
+// ...existing code...
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -6,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/habittracker';
+const mongoUri = 'mongodb+srv://ellerydorroh:nquVumKbdnEVziiC@cluster0.ml4ceao.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const userSchema = new mongoose.Schema({
