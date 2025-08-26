@@ -36,9 +36,13 @@ function getLast7Days() {
 // Map each date to boolean (filled if any habit done)
 function mapDaysToCompletion(history) {
   const last7 = getLast7Days();
-  return last7.map(date =>
-    history[date] && Object.values(history[date]).some(Boolean)
-  );
+  return last7.map(date => {
+    if (history[date]) {
+      return Object.values(history[date]).some(Boolean);
+    } else {
+      return false; // No history for this day, so not completed
+    }
+  });
 }
 
 // Render colored squares for each day (now using CSS Grid)

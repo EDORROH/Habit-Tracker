@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { renderTowerView } = await import("./components/towerView.js");
     if (window.State && window.State.get) {
       const state = await window.State.get();
-      renderTowerView(state.history);
+      renderTowerView(state.history || {});
     }
     // Initialize XP system
     loadXP();
