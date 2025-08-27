@@ -145,14 +145,15 @@ body.dark #instructions {
 }
 
 /* === Category Cards Colors === */
-.category-card.health {
-  background: linear-gradient(135deg, #f3e5f5, #e1bee7);
-  border-left: 4px solid #9c27b0;
+
+.category-card.wellness {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-left: 4px solid #388e3c;
 }
 
-.category-card.productivity {
-  background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
-  border-left: 4px solid #00695c;
+.category-card.focus {
+  background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+  border-left: 4px solid #9c27b0;
 }
 
 .category-card.learning {
@@ -166,13 +167,13 @@ body.dark #instructions {
 }
 
 /* Dark mode adjustments */
-body.dark .category-card.health {
-  background: linear-gradient(135deg, #4a148c, #6a1b9a);
+body.dark .category-card.wellness {
+  background: linear-gradient(135deg, #1b5e20, #388e3c);
   color: #fff;
 }
 
-body.dark .category-card.productivity {
-  background: linear-gradient(135deg, #004d40, #00695c);
+body.dark .category-card.focus {
+  background: linear-gradient(135deg, #4a148c, #6a1b9a);
   color: #fff;
 }
 

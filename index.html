@@ -9,6 +9,23 @@
   <link rel="stylesheet" href="styles.css?v=7" />
 </head>
 <body>
+  <div class="auth-container" style="padding: 1rem; background: #f8f8f8; border-bottom: 1px solid #ddd;">
+    <div style="margin-bottom: 8px; color: #333; font-size: 1rem;">
+      <strong>Register or log in to save your progress!</strong><br>
+      Your XP & and streaks will be securely stored and available on any device.
+    </div>
+    <form id="auth-form" style="display: flex; gap: 8px; align-items: center;">
+      <input type="text" id="auth-username" placeholder="Username" required style="padding: 4px;" />
+      <input type="password" id="auth-password" placeholder="Password" required style="padding: 4px;" />
+      <button type="submit" id="login-btn">Login</button>
+      <button type="button" id="register-btn">Register</button>
+      <span id="auth-status" style="margin-left: 12px; color: #d32f2f;"></span>
+    </form>
+      <div id="auth-logged-in" style="display:none;">
+        Logged in as <span id="auth-user"></span>
+        <button id="auth-logout" style="margin-left:10px;">Logout</button>
+      </div>
+  </div>
   <div class="app">
     <header>
       <h1>Micro-Habit Stacker</h1>
@@ -34,15 +51,12 @@
     </section>
   </div>
 
-  <script>
-    console.log('🌟 HTML loaded, starting script loading...');
-  </script>
+  <!-- Removed nonessential console log: HTML loaded -->
 
   <!-- Load main app logic -->
   <script type="module" src="app.js?v=7"></script>
+  <script src="utilities/state.js"></script>
 
-  <script>
-    console.log('📜 All scripts loaded');
-  </script>
+  <!-- Removed nonessential console log: All scripts loaded -->
 </body>
 </html>

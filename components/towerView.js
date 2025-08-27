@@ -45,8 +45,6 @@ function mapDaysToCompletion(history) {
 export function renderTowerView(history) {
   const completions = mapDaysToCompletion(history);
   const el = document.getElementById('towerView');
-  console.log('[TowerView] Rendering with history:', history);
-  console.log('[TowerView] Completions for last 7 days:', completions);
   if (!el) {
     console.warn('[TowerView] #towerView element not found in DOM');
     return;

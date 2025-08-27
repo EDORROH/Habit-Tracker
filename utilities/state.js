@@ -29,11 +29,23 @@ What belongs here
 
   // Replace localStorage with MongoDB API
   const API_BASE = 'http://localhost:4000/api/state';
-  const USER_ID = 'defaultUser'; // Replace with real user ID if available
+
+
+  function getAuth() {
+  const token = localStorage.getItem('authToken');
+  const userId = localStorage.getItem('authUserId');
+  return { token, userId };
+  }
 
   async function load() {
     try {
-      const res = await fetch(`${API_BASE}/${USER_ID}`);
+      const { token, userId } = getAuth();
+      if (!token || !userId) throw new Error('Not authenticated');
+      const res = await fetch(`${API_BASE}/${userId}`,
+        {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }
+      );
       if (!res.ok) throw new Error('Failed to fetch state');
       const data = await res.json();
       return data ? data : { ...defaults };
@@ -45,10 +57,15 @@ What belongs here
 
   async function save(state) {
     try {
-      await fetch(`${API_BASE}/${USER_ID}`,
+      const { token, userId } = getAuth();
+      if (!token || !userId) throw new Error('Not authenticated');
+      await fetch(`${API_BASE}/${userId}`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify(state)
         }
       );
