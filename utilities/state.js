@@ -21,7 +21,7 @@ What belongs here
     lastXpResetDate: null,
     badges: {},
     timers: {},
-    reminders: []
+    reminders: [],
     darkMode: false 
   };
 
