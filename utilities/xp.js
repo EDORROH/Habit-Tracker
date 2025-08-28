@@ -77,4 +77,4 @@ function getHistory() {
 }
 
 // Export functions for ES6 modules
-export { todayXp, totalXp, getHistory, updateDailyXp, getDailyXp, getTotalXp };
+export { getHistory, updateDailyXp, getDailyXp, getTotalXp };
