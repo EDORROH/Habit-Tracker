@@ -1,10 +1,8 @@
-// ...existing code...
-// ...existing code...
 import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import bcryptjs from 'bcryptjs';  // Change from 'bcrypt' to 'bcryptjs'
+import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 // Initialize Express
@@ -16,7 +14,7 @@ app.use(express.json());
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 const PORT = process.env.PORT || 4000;
 
-// User Schema and Model //
+// User Schema and Model
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
@@ -24,7 +22,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// State Schema and Model (add this after User model)
+// State Schema and Model
 const stateSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
   data: { type: Object, default: {} }
@@ -32,7 +30,7 @@ const stateSchema = new mongoose.Schema({
 
 const State = mongoose.model('State', stateSchema);
 
-// Root routes:
+// Root route
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Habit Tracker API is running!',
@@ -127,11 +125,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Protected route example
-app.get('/protected', authenticateToken, (req, res) => {
-  res.json({ message: 'This is a protected route', user: req.user });
-});
-// State Routes (add this after auth routes, before health checks)
+// State Routes
 app.get('/state/:userId', authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
@@ -147,9 +141,16 @@ app.get('/state/:userId', authenticateToken, async (req, res) => {
       state = new State({
         userId,
         data: {
+          goalCategories: {},
+          selectedCategory: null,
           history: {},
-          xp: { dailyXP: 0, totalXP: 0 },
           streaks: { currentStreak: 0 },
+          xp: 0,
+          dailyXp: 0,
+          lastXpResetDate: null,
+          badges: {},
+          timers: {},
+          reminders: [],
           completedHabits: []
         }
       });
@@ -224,3 +225,4 @@ try {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
+
