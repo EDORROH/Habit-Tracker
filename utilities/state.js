@@ -22,6 +22,7 @@ What belongs here
     badges: {},
     timers: {},
     reminders: []
+    darkMode: false 
   };
 
   const API_BASE = 'https://habit-tracker-c3pt-gzaxiok9g-ellerys-projects-2249135f.vercel.app/state';
