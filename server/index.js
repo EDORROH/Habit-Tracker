@@ -159,7 +159,8 @@ app.get('/state/:userId', authenticateToken, async (req, res) => {
           badges: {},
           timers: {},
           reminders: [],
-          completedHabits: []
+          completedHabits: [],
+          darkMode: false
         }
       });
       await state.save();
