@@ -28,7 +28,7 @@ What belongs here
 
 
   // Replace localStorage with MongoDB API
-  const API_BASE = 'http://localhost:4000/state';
+  const API_BASE = 'https://habit-tracker-c3pt-gzaxiok9g-ellerys-projects-2249135f.vercel.app/state';;
 
 
   function getAuth() {

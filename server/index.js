@@ -32,6 +32,19 @@ const stateSchema = new mongoose.Schema({
 
 const State = mongoose.model('State', stateSchema);
 
+// Root routes:
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Habit Tracker API is running!',
+    endpoints: [
+      'POST /auth/register',
+      'POST /auth/login', 
+      'GET /state/:userId',
+      'POST /state/:userId'
+    ]
+  });
+});
+
 // Auth Routes
 app.post('/auth/register', async (req, res) => {
   try {
