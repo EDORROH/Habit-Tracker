@@ -13,7 +13,9 @@ app.use(cors({
     'http://localhost:5500',
     'http://127.0.0.1:5500',
     'https://habit-tracker-git-main-ellerys-projects-2249135f.vercel.app',
-    'https://habit-tracker-jet-two.vercel.app'
+    'https://habit-tracker-git-main-ellerys-projects-2249135f.vercel.app/', 
+    'https://habit-tracker-jet-two.vercel.app',
+    'https://habit-tracker-jet-two.vercel.app/' 
   ],
   credentials: true
 }));
