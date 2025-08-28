@@ -6,6 +6,87 @@ console.log('🚀 App.js loading...');
 let dailyXP = 0;
 let totalXP = 0;
 
+// Authentication functions
+function getAuthInfo() {
+  return {
+    token: localStorage.getItem('authToken'),
+    userId: localStorage.getItem('authUserId'),
+    username: localStorage.getItem('authUsername')
+  };
+}
+
+function updateAuthUI() {
+  const { token, username } = getAuthInfo();
+  
+  const authForm = document.getElementById('auth-form');
+  const authLoggedIn = document.getElementById('auth-logged-in');
+  const authUser = document.getElementById('auth-user');
+  
+  if (token && username) {
+    // User is logged in
+    if (authForm) authForm.style.display = 'none';
+    if (authLoggedIn) authLoggedIn.style.display = 'block';
+    if (authUser) authUser.textContent = username;
+  } else {
+    // User is not logged in  
+    if (authForm) authForm.style.display = 'flex';
+    if (authLoggedIn) authLoggedIn.style.display = 'none';
+    if (authUser) authUser.textContent = '';
+  }
+}
+
+
+function logout() {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('authUserId');
+  localStorage.removeItem('authUsername');
+  updateAuthUI();
+  showNotification('👋 Logged out successfully!');
+  window.location.reload();
+}
+
+async function handleLogin(event) {
+  event.preventDefault();
+  
+  const username = document.getElementById('auth-username').value;
+  const password = document.getElementById('auth-password').value;
+  const authStatus = document.getElementById('auth-status');
+  
+  if (!username || !password) {
+    authStatus.textContent = '⚠️ Please enter username and password';
+    return;
+  }
+  
+   try {
+    const response = await fetch('https://habit-tracker-c3pt-gzaxiok9g-ellerys-projects-2249135f.vercel.app/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Store auth info
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('authUserId', data.userId);
+      localStorage.setItem('authUsername', data.username);
+      
+      updateAuthUI();
+      authStatus.style.color = '#4caf50';
+      authStatus.textContent = `✅ Welcome back, ${data.username}!`;
+      
+    } else {
+      authStatus.style.color = '#d32f2f';
+      authStatus.textContent = `❌ Login failed: ${data.message}`;
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    authStatus.style.color = '#d32f2f';
+    authStatus.textContent = '❌ Login failed. Please try again.';
+  }
+}
+
 // Load XP from localStorage
 function loadXP() {
   const savedDailyXP = localStorage.getItem('dailyXP');
@@ -257,6 +338,22 @@ function isBadgeUnlocked(badgeId) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log('🎯 DOM Content Loaded');
+   // Initialize authentication
+  updateAuthUI();
+  
+  // Set up login form
+  const authForm = document.getElementById('auth-form');
+  if (authForm) {
+    authForm.addEventListener('submit', handleLogin);
+    console.log('🔐 Login form listener added');
+  }
+  
+  // Set up logout button
+  const authLogout = document.getElementById('auth-logout');
+  if (authLogout) {
+    authLogout.addEventListener('click', logout);
+    console.log('🔐 Logout button listener added');
+  }
   
   try {
     // Import and render Tower View
