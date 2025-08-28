@@ -69,12 +69,12 @@ app.post('/auth/register', async (req, res) => {
     
     // Generate token
     const token = jwt.sign(
-      { userId: user._id, username: user.username },
+      { userId: user._id.toString(), username: user.username },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
     
-    res.json({ token, userId: user._id, username: user.username });
+    res.json({ token, userId: user._id.toString(), username: user.username });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -98,12 +98,12 @@ app.post('/auth/login', async (req, res) => {
     
     // Generate token
     const token = jwt.sign(
-      { userId: user._id, username: user.username },
+      { userId: user._id.toString(), username: user.username },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
     
-    res.json({ token, userId: user._id, username: user.username });
+    res.json({ token, userId: user._id.toString(), username: user.username });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
